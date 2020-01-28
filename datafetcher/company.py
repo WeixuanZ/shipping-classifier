@@ -25,26 +25,33 @@ driver = webdriver.Chrome('./chromedriver', options=chrome_options)
 
 # urls = ['https://opencorporates.com/companies?utf8=✓&q={}&commit=Go&jurisdiction_code=&controller=searches&action=search_companies&order='.format(chr(i)) for i in range(ord('a'),ord('z')+1)]
 
-driver.get('https://opencorporates.com/companies?utf8=✓&q=e&commit=Go&jurisdiction_code=&controller=searches&action=search_companies&order=')
+urls = ['hhttps://opencorporates.com/companies/gb?action=search_companies&commit=Go&controller=searches&order=score&q=&utf8=✓', 'https://opencorporates.com/companies?utf8=✓&q=&commit=Go&jurisdiction_code=&country_code=us&controller=searches&action=search_companies&order=score', 'https://opencorporates.com/companies/ca?action=search_companies&commit=Go&controller=searches&order=score&q=&utf8=✓', 'https://opencorporates.com/companies/sg?action=search_companies&commit=Go&controller=searches&order=score&q=&utf8=✓', 'https://opencorporates.com/companies/fr?action=search_companies&commit=Go&controller=searches&order=score&q=&utf8=✓', 'https://opencorporates.com/companies/dk?action=search_companies&commit=Go&controller=searches&order=score&q=&utf8=✓', 'https://opencorporates.com/companies/fi?action=search_companies&commit=Go&controller=searches&order=score&q=&utf8=✓', 'https://opencorporates.com/companies/hk?action=search_companies&commit=Go&controller=searches&order=score&q=&utf8=✓']
 
 time.sleep(2)
 
 data = {'names': []}
 
-while True:
-    
-    elements = driver.find_elements_by_css_selector("a.company_search_result")
-    names = [i.text.lower() for i in elements]
+for url in urls:
 
-    print(names)
+    driver.get(url)
 
-    data['names'] += names
+    while True:
+        
+        elements = driver.find_elements_by_css_selector("a.company_search_result")
+        names = [i.text.lower() for i in elements]
 
-    time.sleep(5)
+        if len(names) == 0:
+            break
 
-    try:
-        driver.find_elements_by_css_selector("a[rel='next nofollow']")[0].click()
-    except:
-        break
+        print(names)
+
+        data['names'] += names
+
+        time.sleep(5)
+
+        try:
+            driver.find_elements_by_css_selector("a[rel='next nofollow']")[0].click()
+        except:
+            break
 
 dump_json(data, './cache/company_data.json')

@@ -9,6 +9,8 @@ def fetch_data():
     Crawl data using scrapy.
     """
     os.system("cd datafetcher && scrapy crawl port_spider -o ./cache/port_data.json")
+    os.system("cd datafetcher && python3 vessel.py")
+    os.system("cd datafetcher && python3 company.py")
 
 
 def dump_json(data, path):
@@ -48,9 +50,9 @@ def concatenate(data):
 
 def load_data(cache_dir):
     port_data = concatenate(load_json(os.path.join(cache_dir, 'port_data.json')))
-    # vessel_data = concatenate(load_json(os.path.join(cache_dir, 'vessel_data.json')))
-    # company_data = concatenate(load_json(os.path.join(cache_dir, 'company_data.json')))
-    return port_data
+    vessel_data = load_json(os.path.join(cache_dir, 'vessel_data.json'))['names']
+    company_data = load_json(os.path.join(cache_dir, 'company_data.json'))['names']
+    return port_data, vessel_data, company_data
 
 
 def generate_dataset(use_cache=True):
@@ -62,16 +64,16 @@ def generate_dataset(use_cache=True):
 
     if use_cache:
         try:
-            port_data = load_data(cache_dir)
+            port_data, vessel_data, company_data = load_data(cache_dir)
         except FileNotFoundError:
             fetch_data()
-            port_data = load_data(cache_dir)
+            port_data, vessel_data, company_data = load_data(cache_dir)
     else:
         # Fetch and dump to file
         fetch_data()
-        port_data = load_data(cache_dir)
+        port_data, vessel_data, company_data = load_data(cache_dir)
 
-    return {'port': port_data, 'date': date_generator(1000)}
+    return {'port': port_data, 'date': date_generator(len(port_data)), 'vessel': vessel_data, 'company': company_data}
 
 
 dataset = generate_dataset()
