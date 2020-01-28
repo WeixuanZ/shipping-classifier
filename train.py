@@ -3,6 +3,7 @@ import os
 
 from datafetcher.date import date_generator
 
+
 def fetch_data():
     """
     Crawl data using scrapy.
