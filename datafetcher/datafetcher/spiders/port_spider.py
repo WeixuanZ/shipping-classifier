@@ -7,7 +7,7 @@ class PortSpider(scrapy.Spider):
 
     def parse(self, response):
 
-        yield {"name": response.css("div.browseresults p b a::text").getall()}
+        yield {"names": response.css("div.browseresults p b a::text").getall()}
 
         for page_button in response.css("div.page-buttons a"):
             if page_button.css("::text").get() == 'Next >':
