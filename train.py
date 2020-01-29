@@ -94,12 +94,38 @@ def format_dataset(data):
     'alpha': ['a']*len(label),
     'text': text})
 
-    df_train, _df_test = train_test_split(df, test_size=0.05)
+    df_train, _df_test = train_test_split(df, test_size=0.1)
+    df_dev, df_test = train_test_split(_df_test, test_size=0.2)
     df_test = pd.DataFrame({'guide': _df_test['guide'], 'text': _df_test['text']})
 
     df_train.to_csv('./bert/dataset/train.tsv', sep='\t', index=False, header=False)
+    df_dev.to_csv('./bert/dataset/dev.tsv', sep='\t', index=False, header=False)
     df_test.to_csv('./bert/dataset/test.tsv', sep='\t', index=False, header=True)
 
 
+
+def train():
+    if os.path.isfile('./bert/dataset/train.tsv') is False or os.path.isfile('./bert/dataset/test.tsv') is False:
+        format_dataset(generate_dataset())
+    if os.path.isdir('./bert/model') is False or len(os.listdir('./bert/model/'))==0:
+        raise RuntimeError('Pretrained model not found')
+
+    os.system("cd ./bert && python3 run_classifier.py --task_name=cola --do_train=true --do_eval=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./model/bert_model.ckpt --max_seq_length=64 --train_batch_size=2 --learning_rate=5e-5 --num_train_epochs=3.0 --output_dir=./bert_output/ --do_lower_case=true --save_checkpoints_steps 10000")
+
+
+
+
+
+
+
+
 dataset = generate_dataset()
-print(dataset)
+# print(dataset)
+# dump_json(dataset, './dataset.json')
+
+format_dataset(dataset)
+
+train()
+
+
+
