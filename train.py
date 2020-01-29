@@ -1,5 +1,8 @@
 import json
 import os
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import uuid
 
 from datafetcher.date import date_generator
 
@@ -73,7 +76,29 @@ def generate_dataset(use_cache=True):
         fetch_data()
         port_data, vessel_data, company_data = load_data(cache_dir)
 
-    return {'port': port_data, 'date': date_generator(len(port_data)), 'vessel': vessel_data, 'company': company_data}
+    return {'port': port_data, 'date': date_generator(len(company_data)), 'vessel': vessel_data, 'company': company_data}
+
+
+def format_dataset(data):
+    identifier = []
+    label = []
+    text = []
+    for k, v in data.items():
+        for i in v:
+            identifier.append(uuid.uuid4())
+            label.append(k)
+            text.append(i)
+
+    df = pd.DataFrame({'guide': identifier,
+    'label':label,
+    'alpha': ['a']*len(label),
+    'text': text})
+
+    df_train, _df_test = train_test_split(df, test_size=0.05)
+    df_test = pd.DataFrame({'guide': _df_test['guide'], 'text': _df_test['text']})
+
+    df_train.to_csv('./bert/dataset/train.tsv', sep='\t', index=False, header=False)
+    df_test.to_csv('./bert/dataset/test.tsv', sep='\t', index=False, header=True)
 
 
 dataset = generate_dataset()
