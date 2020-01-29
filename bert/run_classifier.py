@@ -353,7 +353,7 @@ class ColaProcessor(DataProcessor):
 
   def get_labels(self):
     """See base class."""
-    return ["0", "1"]
+    return ["port", "date", "vessel", "company"]
 
   def _create_examples(self, lines, set_type):
     """Creates examples for the training and dev sets."""
