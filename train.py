@@ -1,6 +1,7 @@
 import json
 import os
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 import uuid
 
@@ -56,6 +57,10 @@ def load_data(cache_dir):
     vessel_data = load_json(os.path.join(cache_dir, 'vessel_data.json'))['names']
     company_data = load_json(os.path.join(cache_dir, 'company_data.json'))['names']
     return port_data, vessel_data, company_data
+
+
+def rand_choose(data, num):
+    return [data[i] for i in np.random.choice(np.arange(0, len(data), 1, dtype=np.int16), size=num)]
 
 
 def generate_dataset(use_cache=True):
