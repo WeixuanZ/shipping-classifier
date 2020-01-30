@@ -12,9 +12,7 @@ parser.add_argument('-t', '--text', type=str, nargs='+', default=[], required=Fa
 
 args = parser.parse_args()
 
-use_test = False if len(args.text) != 0 else True
-
-if use_test is True:
+if len(args.text) == 0:
     test()
 else:
     try:
