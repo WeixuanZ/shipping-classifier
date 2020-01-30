@@ -77,7 +77,7 @@ def rand_choose(data, num):
 
 def generate_dataset(use_cache=True):
     """
-    Function that combines the individual dataset.
+    Function that combines the individual datasets.
     :param use_cache: bool [True]
     :return: dict
     """
@@ -165,13 +165,7 @@ def test():
     print(df_map_result)
 
 
-dataset = generate_dataset()
-# print(dataset)
-# dump_json(dataset, './dataset.json')
+if __name__=="__main__":
 
-
-# format_dataset(dataset)
-
-# train()
-
-test()
+    format_dataset(generate_dataset())
+    train()
