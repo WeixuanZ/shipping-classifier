@@ -77,11 +77,10 @@ def generate_dataset(use_cache=True):
             fetch_data()
             port_data, vessel_data, company_data = load_data(cache_dir)
     else:
-        # Fetch and dump to file
         fetch_data()
         port_data, vessel_data, company_data = load_data(cache_dir)
 
-    return {'port': port_data, 'date': date_generator(len(company_data)), 'vessel': vessel_data, 'company': company_data}
+    return {'port': rand_choose(port_data, len(vessel_data)), 'date': date_generator(len(company_data)), 'vessel': vessel_data, 'company': company_data}
 
 
 def format_dataset(data):
@@ -115,11 +114,25 @@ def train():
     if os.path.isdir('./bert/model') is False or len(os.listdir('./bert/model/'))==0:
         raise RuntimeError('Pretrained model not found')
 
-    os.system("cd ./bert && python3 run_classifier.py --task_name=cola --do_train=true --do_eval=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./model/bert_model.ckpt --max_seq_length=64 --train_batch_size=2 --learning_rate=5e-5 --num_train_epochs=3.0 --output_dir=./bert_output/ --do_lower_case=true --save_checkpoints_steps 10000")
+    os.system("cd ./bert && python3 run_classifier.py --task_name=cola --do_train=true --do_eval=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./model/bert_model.ckpt --max_seq_length=64 --train_batch_size=32 --learning_rate=5e-5 --num_train_epochs=3.0 --output_dir=./bert_output/ --do_lower_case=true --save_checkpoints_steps 100")
 
 
 
+def test():
+    os.system("cd ./bert && python3 run_classifier.py --task_name=cola --do_predict=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./bert_output/model.ckpt-190 --max_seq_length=64 --output_dir=./bert_output/")
 
+    df_test = pd.read_csv('./bert/dataset/test.tsv', sep='\t')
+    df_test_with_label = pd.read_csv('./bert/dataset/test_with_label.tsv', sep='\t')
+
+    df_result = pd.read_csv('./bert/bert_output/test_results.tsv', sep='\t', header=None)
+
+    df_map_result = pd.DataFrame({
+        'text': df_test['text'],
+        'label': df_test_with_label['label'],
+        'prediction': [['port', 'date', 'vessel', 'company'][i] for i in df_result.idxmax(axis=1)]
+        })
+
+    print(df_map_result)
 
 
 
