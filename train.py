@@ -33,8 +33,8 @@ def dump_json(data, path):
 def load_json(path):
     """
     Load JSON object from file.
-    :param path:
-    :return:
+    :param path: str
+    :return data: dict
     """
     with open(path, 'r') as f:
         data = json.load(f)
@@ -44,8 +44,8 @@ def load_json(path):
 def concatenate(data):
     """
     Return all the names as a single list.
-    :param data:
-    :return:
+    :param data: dict
+    :return combined_data: list
     """
     combined_data = []
     for i in data:
@@ -54,6 +54,11 @@ def concatenate(data):
 
 
 def load_data(cache_dir):
+    """
+    Function for loading data.
+    :param cache_dir: str
+    :return port_data, vessel_data, company_data: list
+    """
     port_data = concatenate(load_json(os.path.join(cache_dir, 'port_data.json')))
     vessel_data = load_json(os.path.join(cache_dir, 'vessel_data.json'))['names']
     company_data = load_json(os.path.join(cache_dir, 'company_data.json'))['names']
@@ -61,10 +66,21 @@ def load_data(cache_dir):
 
 
 def rand_choose(data, num):
+    """
+    Function of random selection of subset.
+    :param data: list
+    :param num: int
+    :return : list
+    """
     return [data[i] for i in np.random.choice(np.arange(0, len(data), 1, dtype=np.int16), size=num)]
 
 
 def generate_dataset(use_cache=True):
+    """
+    Function that combines the individual dataset.
+    :param use_cache: bool [True]
+    :return: dict
+    """
     cache_dir = './datafetcher/cache'
     try:
         os.makedirs(cache_dir)
@@ -86,6 +102,10 @@ def generate_dataset(use_cache=True):
 
 
 def format_dataset(data):
+    """
+    Function that formats and store the dataset into required format.
+    :param data: dict
+    """
     identifier = []
     label = []
     text = []
@@ -112,6 +132,11 @@ def format_dataset(data):
 
 
 def train():
+    """
+    Function for training.
+    :param batch_size: int [32]
+    :param epochs: float [3.0]
+    """
     if os.path.isfile('./bert/dataset/train.tsv') is False or os.path.isfile('./bert/dataset/test.tsv') is False:
         format_dataset(generate_dataset())
     if os.path.isdir('./bert/model') is False or len(os.listdir('./bert/model/')) == 0:
