@@ -7,13 +7,11 @@ from selenium import webdriver
 def dump_json(data, path):
     """
     Save JSON object to file.
-    :param data:
-    :param filename:
-    :return:
+    :param data: dict
+    :param path: str
     """
     with open(path, 'w+') as f:
-        data = json.dump(data, f)
-    return data
+        json.dump(data, f)
 
 
 chrome_options = webdriver.ChromeOptions()
