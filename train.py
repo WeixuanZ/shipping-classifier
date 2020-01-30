@@ -131,7 +131,7 @@ def format_dataset(data):
     df_test.to_csv('./bert/dataset/test.tsv', sep='\t', index=False, header=True)
 
 
-def train():
+def train(batch_size=32, epochs=3.0):
     """
     Function for training.
     :param batch_size: int [32]
@@ -143,7 +143,8 @@ def train():
         raise RuntimeError('Pretrained model not found')
 
     os.system(
-        "cd ./bert && python3 run_classifier.py --task_name=cola --do_train=true --do_eval=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./model/bert_model.ckpt --max_seq_length=64 --train_batch_size=32 --learning_rate=5e-5 --num_train_epochs=3.0 --output_dir=./bert_output/ --do_lower_case=true --save_checkpoints_steps 100")
+        "cd ./bert && python3 run_classifier.py --task_name=cola --do_train=true --do_eval=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./model/bert_model.ckpt --max_seq_length=64 --train_batch_size={} --learning_rate=5e-5 --num_train_epochs={} --output_dir=./bert_output/ --do_lower_case=true --save_checkpoints_steps 100".format(
+            batch_size, epochs))
 
 
 def test():
