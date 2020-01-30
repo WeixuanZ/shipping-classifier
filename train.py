@@ -164,5 +164,6 @@ def test():
 
 
 if __name__ == "__main__":
-    format_dataset(generate_dataset())
+    if os.path.isfile('./bert/dataset/test.tsv') is False:
+        format_dataset(generate_dataset())
     train()
