@@ -163,7 +163,6 @@ def test():
     print(df_map_result)
 
 
-if __name__=="__main__":
-
+if __name__ == "__main__":
     format_dataset(generate_dataset())
     train()

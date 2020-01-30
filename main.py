@@ -1,11 +1,12 @@
 import argparse
-import uuid
-import pandas as pd
 import os
+import uuid
+
+import pandas as pd
 
 from train import test
 
-parser = argparse.ArgumentParser(prog='main',usage='%(prog)s [-t] strings', description='Classifier.')
+parser = argparse.ArgumentParser(prog='main', usage='%(prog)s [-t] strings', description='Classifier.')
 
 parser.add_argument('-t', '--text', type=str, nargs='+', default=[], required=False, help='Strings to be classified.')
 
