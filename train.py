@@ -93,17 +93,19 @@ def format_dataset(data):
             label.append(k)
             text.append(i)
 
-    df = pd.DataFrame({'guide': identifier,
+    df = pd.DataFrame({'guid': identifier,
     'label':label,
     'alpha': ['a']*len(label),
     'text': text})
 
     df_train, _df_test = train_test_split(df, test_size=0.1)
-    df_dev, df_test = train_test_split(_df_test, test_size=0.2)
-    df_test = pd.DataFrame({'guide': _df_test['guide'], 'text': _df_test['text']})
+    df_dev, df_test_with_label = train_test_split(_df_test, test_size=0.2)
+    df_test = pd.DataFrame({'guid': df_test_with_label['guid'], 'text': df_test_with_label['text']})
 
     df_train.to_csv('./bert/dataset/train.tsv', sep='\t', index=False, header=False)
     df_dev.to_csv('./bert/dataset/dev.tsv', sep='\t', index=False, header=False)
+
+    df_test_with_label.to_csv('./bert/dataset/test_with_label.tsv', sep='\t', index=False, header=True)
     df_test.to_csv('./bert/dataset/test.tsv', sep='\t', index=False, header=True)
 
 
