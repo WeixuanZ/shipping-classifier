@@ -26,7 +26,7 @@ else:
     df.to_csv('./bert/cache/test.tsv', sep='\t', index=False, header=True)
 
     os.system(
-        "cd ./bert && python3 run_classifier.py --task_name=cola --do_predict=true --data_dir=./cache --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./bert_output/model.ckpt-190 --max_seq_length=64 --output_dir=./cache/")
+        "cd ./bert && python3 run_classifier.py --task_name=cola --do_predict=true --data_dir=./cache --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./bert_output/model.ckpt-1512 --max_seq_length=64 --output_dir=./cache/")
     df_result = pd.read_csv('./bert/cache/test_results.tsv', sep='\t', header=None)
     df_map_result = pd.DataFrame({
         'text': df['text'],

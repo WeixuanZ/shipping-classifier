@@ -129,7 +129,7 @@ def format_dataset(data):
     df_test.to_csv('./bert/dataset/test.tsv', sep='\t', index=False, header=True)
 
 
-def train(batch_size=32, epochs=3.0):
+def train(batch_size=32, learn_rate=5e-5, epochs=3.0):
     """
     Function for training.
     :param batch_size: int [32]
@@ -141,13 +141,13 @@ def train(batch_size=32, epochs=3.0):
         raise RuntimeError('Pretrained model not found')
 
     os.system(
-        "cd ./bert && python3 run_classifier.py --task_name=cola --do_train=true --do_eval=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./model/bert_model.ckpt --max_seq_length=64 --train_batch_size={} --learning_rate=5e-5 --num_train_epochs={} --output_dir=./bert_output/ --do_lower_case=true --save_checkpoints_steps 100".format(
-            batch_size, epochs))
+        "cd ./bert && python3 run_classifier.py --task_name=cola --do_train=true --do_eval=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./model/bert_model.ckpt --max_seq_length=64 --train_batch_size={} --learning_rate={} --num_train_epochs={} --output_dir=./bert_output/ --do_lower_case=true --save_checkpoints_steps 100".format(
+            batch_size, learn_rate, epochs))
 
 
 def test():
     os.system(
-        "cd ./bert && python3 run_classifier.py --task_name=cola --do_predict=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./bert_output/model.ckpt-190 --max_seq_length=64 --output_dir=./bert_output/")
+        "cd ./bert && python3 run_classifier.py --task_name=cola --do_predict=true --data_dir=./dataset --vocab_file=./model/vocab.txt --bert_config_file=./model/bert_config.json --init_checkpoint=./bert_output/model.ckpt-1512 --max_seq_length=64 --output_dir=./bert_output/")
 
     df_test = pd.read_csv('./bert/dataset/test.tsv', sep='\t')
     df_test_with_label = pd.read_csv('./bert/dataset/test_with_label.tsv', sep='\t')
@@ -166,4 +166,4 @@ def test():
 if __name__ == "__main__":
     if os.path.isfile('./bert/dataset/test.tsv') is False:
         format_dataset(generate_dataset())
-    train()
+    train(batch_size=4, learn_rate=3e-5)

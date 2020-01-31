@@ -6,10 +6,10 @@ A simple text classifier using BERT - for dates, locations, company names and ve
 ## Evaluation Results
 
 ```
-eval_accuracy = 0.9444444
-eval_loss = 0.18641633
-global_step = 190
-loss = 0.18245141
+eval_accuracy = 0.9722222
+eval_loss = 0.15213586
+global_step = 1525
+loss = 0.1488403
 ```
 
 
@@ -25,7 +25,7 @@ loss = 0.18245141
 6                         hasse bank johansen consult  company    company
 7                                                aden     port       port
 8                                      msc meraviglia   vessel     vessel
-9                                                 air   vessel    company
+9                                                 air   vessel     vessel
 10                    ministry of hunting affairs aps  company    company
 11                                         bob barker   vessel     vessel
 12                                       msc preziosa   vessel     vessel
